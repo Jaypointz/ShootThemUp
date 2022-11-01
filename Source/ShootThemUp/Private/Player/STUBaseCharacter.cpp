@@ -8,6 +8,8 @@
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(BaseCharacterLog, All, All);
+
 // Sets default values
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -44,6 +46,8 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
 
     const auto Health = HealthComponent->GetHealth();
     HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+
+    TakeDamage(0.1f, FDamageEvent{}, Controller, this);
 }
 
 // Called to bind functionality to input
@@ -67,7 +71,8 @@ bool ASTUBaseCharacter::IsRunning() const
 
 float ASTUBaseCharacter::GetMovementDirection() const
 {
-    if(GetVelocity().IsZero()) return 0.0f;
+    if (GetVelocity().IsZero())
+        return 0.0f;
 
     const auto VelocityNormal = GetVelocity().GetSafeNormal();
     const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
@@ -79,7 +84,8 @@ float ASTUBaseCharacter::GetMovementDirection() const
 
 void ASTUBaseCharacter::MoveForward(float Amount)
 {
-    if(Amount == 0.0f) return;
+    if (Amount == 0.0f)
+        return;
 
     IsMovingForward = Amount > 0.0f;
     AddMovementInput(GetActorForwardVector(), Amount);
@@ -87,7 +93,8 @@ void ASTUBaseCharacter::MoveForward(float Amount)
 
 void ASTUBaseCharacter::MoveRight(float Amount)
 {
-    if(Amount == 0.0f) return;
+    if (Amount == 0.0f)
+        return;
 
     AddMovementInput(GetActorRightVector(), Amount);
 }
