@@ -27,19 +27,19 @@ public:
     FOnHealthChanged OnHealthChanged;
 
 protected:
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Health, meta = (ClampMin = "0.0", ClampMax = "1000.0"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health", meta = (ClampMin = "0.0", ClampMax = "1000.0"))
     float MaxHealth = 100.0f;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Heal)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal")
     bool AutoHeal = true;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Heal, meta = (EditCondition = "AutoHeal"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (EditCondition = "AutoHeal"))
     float HealUpdateTime = 0.1f;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Heal, meta = (EditCondition = "AutoHeal"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (EditCondition = "AutoHeal"))
     float HealDelay = 3.0f;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Heal, meta = (EditCondition = "AutoHeal"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (EditCondition = "AutoHeal"))
     float HealModifier = 0.3f;
 
     // Called when the game starts
