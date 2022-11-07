@@ -8,6 +8,7 @@
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/STUWeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Controller.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
@@ -132,9 +133,11 @@ void ASTUBaseCharacter::OnDeath()
     {
         Controller->ChangeState(NAME_Spectating);
     }
+
+    GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 }
 
-void ASTUBaseCharacter::OnHealthChanged(float Health)
+void ASTUBaseCharacter::OnHealthChanged(float Health) const
 {
     HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }

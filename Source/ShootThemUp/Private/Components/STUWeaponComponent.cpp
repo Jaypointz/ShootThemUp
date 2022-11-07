@@ -35,6 +35,7 @@ void USTUWeaponComponent::SpawnWeapon()
         return;
 
     CurrentWeapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
+    CurrentWeapon->SetOwner(Character);
 
     if (!CurrentWeapon)
         return;
