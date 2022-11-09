@@ -11,7 +11,7 @@ void ASTULauncherWeapon::StartFire()
 
 void ASTULauncherWeapon::MakeShot()
 {
-    if (!GetWorld())
+    if (!GetWorld() || IsAmmoEmpty())
         return;
 
     FVector TraceStart;
@@ -36,4 +36,5 @@ void ASTULauncherWeapon::MakeShot()
     }
     // Set Projectile params
 
+    DecreaseAmmo();
 }
