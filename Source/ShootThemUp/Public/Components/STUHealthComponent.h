@@ -22,6 +22,9 @@ public:
     UFUNCTION(BlueprintCallable)
     bool IsDead() const { return FMath::IsNearlyZero(Health); }
 
+    UFUNCTION(BlueprintCallable)
+    float GetHealthPercent() const { return Health / MaxHealth; }
+
     float GetHealth() const { return Health; }
 
 protected:
@@ -49,7 +52,8 @@ private:
     FTimerHandle HealTimerHandle;
 
     UFUNCTION()
-    void OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+    void OnTakeAnyDamage(
+        AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
     void HealUpdate();
     void SetHealth(float NewHealth);
