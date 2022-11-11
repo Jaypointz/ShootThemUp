@@ -1,6 +1,5 @@
 // Shoot Them Up Game, All Rights Reserved.
 
-
 #include "UI/STUPlayerHUDWidget.h"
 #include "STUHealthComponent.h"
 #include "STUWeaponComponent.h"
@@ -20,17 +19,31 @@ float USTUPlayerHUDWidget::GetHealthPercent() const
     return HealthComponent->GetHealthPercent();
 }
 
-bool USTUPlayerHUDWidget::GetWeaponUIData(FWeaponUIData& UIData) const
+bool USTUPlayerHUDWidget::GetCurrentWeaponUIData(FWeaponUIData& UIData) const
 {
-    const auto Player = GetOwningPlayerPawn();
-    if (!Player)
-        return false;
-
-    const auto Component = Player->GetComponentByClass(USTUWeaponComponent::StaticClass());
-    const auto WeaponComponent = Cast<USTUWeaponComponent>(Component);
-
+    const auto WeaponComponent = GetWeaponComponent();
     if (!WeaponComponent)
         return false;
 
     return WeaponComponent->GetWeaponUIData(UIData);
+}
+
+bool USTUPlayerHUDWidget::GetCurrentAmmoData(FAmmoData& AmmoData) const
+{
+    const auto WeaponComponent = GetWeaponComponent();
+    if (!WeaponComponent)
+        return false;
+
+    return WeaponComponent->GetAmmoData(AmmoData);
+}
+
+USTUWeaponComponent* USTUPlayerHUDWidget::GetWeaponComponent() const
+{
+    const auto Player = GetOwningPlayerPawn();
+    if (!Player)
+        return nullptr;
+
+    const auto Component = Player->GetComponentByClass(USTUWeaponComponent::StaticClass());
+
+    return Cast<USTUWeaponComponent>(Component);
 }
