@@ -100,7 +100,6 @@ void ASTUBaseWeapon::DecreaseAmmo()
     }
 
     --CurrentAmmo.Bullets;
-    LogAmmo();
 
     if (IsClipEmpty() && !IsAmmoEmpty())
     {
@@ -141,7 +140,7 @@ bool ASTUBaseWeapon::CanReload() const
     return CurrentAmmo.Bullets < DefaultAmmo.Bullets && CurrentAmmo.Clips > 0;
 }
 
-void ASTUBaseWeapon::LogAmmo()
+void ASTUBaseWeapon::LogAmmo() const
 {
     FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " / ";
     AmmoInfo += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);

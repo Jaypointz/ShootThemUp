@@ -3,15 +3,11 @@
 #include "UI/STUPlayerHUDWidget.h"
 #include "STUHealthComponent.h"
 #include "STUWeaponComponent.h"
+#include "STUUtils.h"
 
 float USTUPlayerHUDWidget::GetHealthPercent() const
 {
-    const auto Player = GetOwningPlayerPawn();
-    if (!Player)
-        return 0.0f;
-
-    const auto Component = Player->GetComponentByClass(USTUHealthComponent::StaticClass());
-    const auto HealthComponent = Cast<USTUHealthComponent>(Component);
+    const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
 
     if (!HealthComponent)
         return 0.0f;
@@ -21,7 +17,7 @@ float USTUPlayerHUDWidget::GetHealthPercent() const
 
 bool USTUPlayerHUDWidget::GetCurrentWeaponUIData(FWeaponUIData& UIData) const
 {
-    const auto WeaponComponent = GetWeaponComponent();
+    const auto WeaponComponent = STUUtils::GetSTUPlayerComponent<USTUWeaponComponent>(GetOwningPlayerPawn());
     if (!WeaponComponent)
         return false;
 
@@ -30,20 +26,22 @@ bool USTUPlayerHUDWidget::GetCurrentWeaponUIData(FWeaponUIData& UIData) const
 
 bool USTUPlayerHUDWidget::GetCurrentAmmoData(FAmmoData& AmmoData) const
 {
-    const auto WeaponComponent = GetWeaponComponent();
+    const auto WeaponComponent = STUUtils::GetSTUPlayerComponent<USTUWeaponComponent>(GetOwningPlayerPawn());
     if (!WeaponComponent)
         return false;
 
     return WeaponComponent->GetAmmoData(AmmoData);
 }
 
-USTUWeaponComponent* USTUPlayerHUDWidget::GetWeaponComponent() const
+bool USTUPlayerHUDWidget::IsPlayerAlive() const
 {
-    const auto Player = GetOwningPlayerPawn();
-    if (!Player)
-        return nullptr;
+    const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
 
-    const auto Component = Player->GetComponentByClass(USTUWeaponComponent::StaticClass());
+    return HealthComponent && !HealthComponent->IsDead();
+}
 
-    return Cast<USTUWeaponComponent>(Component);
+bool USTUPlayerHUDWidget::IsPlayerSpectating() const
+{
+    const auto Controller = GetOwningPlayer();
+    return Controller && Controller->GetStateName() == NAME_Spectating;
 }

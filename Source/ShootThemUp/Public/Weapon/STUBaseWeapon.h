@@ -56,7 +56,7 @@ protected:
     void DecreaseAmmo();
     bool IsAmmoEmpty() const;
     bool IsClipEmpty() const;
-    void LogAmmo();
+    void LogAmmo() const;
 
 private:
     FAmmoData CurrentAmmo;
