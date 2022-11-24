@@ -1,9 +1,9 @@
 #pragma once
 #include "STUCoreTypes.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature);
-
 class ASTUBaseWeapon;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, ASTUBaseWeapon*);
 
 // Weapon
 USTRUCT(BlueprintType)
