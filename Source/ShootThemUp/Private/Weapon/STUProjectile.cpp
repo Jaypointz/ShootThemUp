@@ -4,8 +4,11 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "DrawDebugHelpers.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 ASTUProjectile::ASTUProjectile()
 {
@@ -32,10 +35,20 @@ void ASTUProjectile::BeginPlay()
     check(MovementComponent);
     check(CollisionComponent);
     check(WeaponFX);
+    check(ProjectileFX)
 
-    MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
+        MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
     CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);
     CollisionComponent->OnComponentHit.AddDynamic(this, &ASTUProjectile::OnProjectileHit);
+
+    ProjectileFXComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(ProjectileFX, //
+        GetRootComponent(),                                                            //
+        FName(),                                                                       //
+        FVector::ZeroVector,                                                           //
+        FRotator::ZeroRotator,                                                         //
+        EAttachLocation::SnapToTarget,                                                 //
+        true);
+
     SetLifeSpan(LifeSeconds);
 }
 
@@ -61,7 +74,12 @@ void ASTUProjectile::OnProjectileHit(
 
     WeaponFX->PlayImpactFX(Hit);
 
-    Destroy();
+    if (ProjectileFXComponent)
+    {
+        ProjectileFXComponent->SetVisibility(false);
+        CollisionComponent->SetVisibility(false);
+    }
+    SetLifeSpan(1.0f);
 }
 
 AController* ASTUProjectile::GetController() const
