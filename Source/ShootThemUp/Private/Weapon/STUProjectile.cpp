@@ -65,7 +65,7 @@ void ASTUProjectile::OnProjectileHit(
         GetActorLocation(),                         //
         DamageRadius,                               //
         UDamageType::StaticClass(),                 //
-        {GetOwner()},                               //
+        {GetOwner()},                             //
         this,                                       //
         GetController(),                            //
         DoFullDamage);
