@@ -79,7 +79,7 @@ void ASTUProjectile::OnProjectileHit(
         ProjectileFXComponent->SetVisibility(false);
         CollisionComponent->SetVisibility(false);
     }
-    SetLifeSpan(1.0f);
+    SetLifeSpan(0.4f);
 }
 
 AController* ASTUProjectile::GetController() const
