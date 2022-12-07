@@ -6,9 +6,7 @@
 #include "Components/STUWeaponComponent.h"
 #include "STUAIWeaponComponent.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class SHOOTTHEMUP_API USTUAIWeaponComponent : public USTUWeaponComponent
 {
