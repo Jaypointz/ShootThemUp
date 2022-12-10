@@ -6,6 +6,7 @@
 #include "STUAmmoPickup.h"
 #include "Components/ActorComponent.h"
 #include "STUCoreTypes.h"
+#include "STUNeedAmmoDecorator.h"
 #include "STUWeaponComponent.generated.h"
 
 class ASTUBaseWeapon;
@@ -27,6 +28,7 @@ public:
     bool GetWeaponUIData(FWeaponUIData& UIData) const;
     bool GetAmmoData(FAmmoData& AmmoData) const;
     bool TryAddAmmo(const TSubclassOf<ASTUBaseWeapon>& WeaponType, int32 ClipsAmount);
+    bool NeedAmmo(const TSubclassOf<ASTUBaseWeapon>& WeaponType);
 
 protected:
     UPROPERTY()

@@ -203,6 +203,19 @@ bool USTUWeaponComponent::TryAddAmmo(const TSubclassOf<ASTUBaseWeapon>& WeaponTy
     return false;
 }
 
+bool USTUWeaponComponent::NeedAmmo(const TSubclassOf<ASTUBaseWeapon>& WeaponType)
+{
+    for (const auto Weapon : Weapons)
+    {
+        if (Weapon && Weapon->IsA(WeaponType))
+        {
+            return !Weapon->IsAmmoFull();
+        }
+    }
+
+    return false;
+}
+
 void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComponent)
 {
     ACharacter* Character = Cast<ACharacter>(GetOwner());
