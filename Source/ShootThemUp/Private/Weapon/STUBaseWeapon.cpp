@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "STUPlayerCharacter.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All);
 
@@ -123,6 +124,13 @@ bool ASTUBaseWeapon::IsAmmoFull() const
 {
     return CurrentAmmo.Clips == DefaultAmmo.Clips && //
            CurrentAmmo.Bullets == DefaultAmmo.Bullets;
+}
+
+bool ASTUBaseWeapon::IsPlayerRunning() const
+{
+    const auto Player = Cast<ASTUPlayerCharacter>(GetOwner());
+
+    return Player ? Player->IsRunning() : false;
 }
 
 void ASTUBaseWeapon::ChangeClip()
