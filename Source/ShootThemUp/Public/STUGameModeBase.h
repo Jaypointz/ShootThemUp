@@ -22,6 +22,10 @@ public:
 
     void Killed(AController* KillerController, AController* VictimController);
 
+    int32 GetCurrentRoundNum() const { return CurrentRound; }
+    FGameData GetGameData() const { return GameData; }
+    int32 GetRoundSecondsRemaining() const { return RoundCountDown; }
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     TSubclassOf<AAIController> AIControllerClass;
