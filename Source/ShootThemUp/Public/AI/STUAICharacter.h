@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Player/STUBaseCharacter.h"
+#include "STUCoreTypes.h"
 #include "STUAICharacter.generated.h"
 
 class UBehaviorTree;
@@ -20,5 +21,10 @@ public:
     UBehaviorTree* BehaviorTreeAsset;
 
 protected:
+    virtual void BeginPlay() override;
     virtual void OnDeath() override;
+
+private:
+    void OnMatchStateChanged(ESTUMatchState State);
+    void CleanupAI();
 };

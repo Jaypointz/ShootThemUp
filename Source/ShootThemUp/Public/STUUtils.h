@@ -25,4 +25,6 @@ public:
 
         return PlayerState1 && PlayerState2 && PlayerState1->GetTeamId() != PlayerState2->GetTeamId();
     }
+
+    static FText TextFromInt(int32 Number) { return FText::FromString(FString::FromInt(Number)); }
 };
