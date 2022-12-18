@@ -31,7 +31,7 @@ public:
     UFUNCTION(BlueprintImplementableEvent, Category = "UI")
     void OnTakeDamage();
 
-    virtual bool Initialize() override;
+    virtual void NativeOnInitialized() override;
 
 private:
     void OnHealthChanged(float Health, float HealthDelta);
