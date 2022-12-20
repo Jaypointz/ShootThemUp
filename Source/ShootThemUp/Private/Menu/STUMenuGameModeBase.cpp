@@ -7,6 +7,6 @@
 
 ASTUMenuGameModeBase::ASTUMenuGameModeBase()
 {
-    PlayerControllerClass = ASTUMenuGameModeBase::StaticClass();
+    PlayerControllerClass = ASTUMenuPlayerController::StaticClass();
     HUDClass = ASTUMenuHUD::StaticClass();
 }
