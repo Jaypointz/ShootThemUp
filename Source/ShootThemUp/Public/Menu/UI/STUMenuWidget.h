@@ -23,7 +23,7 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* QuitGameButton;
 
-        UPROPERTY(meta = (BindWidget))
+    UPROPERTY(meta = (BindWidget))
     UHorizontalBox* LevelItemsBox;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
