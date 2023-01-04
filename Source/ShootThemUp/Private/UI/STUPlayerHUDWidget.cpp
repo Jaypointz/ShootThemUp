@@ -7,6 +7,8 @@
 #include "Components/ProgressBar.h"
 #include "Player/STUPlayerState.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSTUPlayerHUD, All, All);
+
 float USTUPlayerHUDWidget::GetHealthPercent() const
 {
     const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
@@ -45,6 +47,9 @@ bool USTUPlayerHUDWidget::IsPlayerAlive() const
 bool USTUPlayerHUDWidget::IsPlayerSpectating() const
 {
     const auto Controller = GetOwningPlayer();
+
+    UE_LOG(LogSTUPlayerHUD, Error, TEXT("Player - %s; State - %d"), *Controller->GetName(), Controller->GetStateName() == NAME_Spectating);
+
     return Controller && Controller->GetStateName() == NAME_Spectating;
 }
 
@@ -63,7 +68,10 @@ void USTUPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
 {
     if (HealthDelta < 0.0f)
     {
-        OnTakeDamage();
+        if (!IsAnimationPlaying(DamageAnimation))
+        {
+            PlayAnimation(DamageAnimation);
+        }
     }
 
     UpdateHealthBar();
