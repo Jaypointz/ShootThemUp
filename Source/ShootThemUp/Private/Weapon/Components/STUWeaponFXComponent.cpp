@@ -5,6 +5,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/DecalComponent.h"
+#include "Sound/SoundCue.h"
 
 USTUWeaponFXComponent::USTUWeaponFXComponent()
 {
@@ -44,4 +45,8 @@ void USTUWeaponFXComponent::PlayImpactFX(const FHitResult& Hit)
     {
         DecalComponent->SetFadeOut(ImpactData.DecalData.LifeTime, ImpactData.DecalData.FadeOutTime);
     }
+
+    // Sound
+
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactData.Sound, Hit.ImpactPoint);
 }
