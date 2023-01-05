@@ -9,6 +9,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Sections/MovieSceneParticleSection.h"
+#include "STUUtils.h"
+#include "Components/AudioComponent.h"
 
 ASTUProjectile::ASTUProjectile()
 {
@@ -35,19 +38,16 @@ void ASTUProjectile::BeginPlay()
     check(MovementComponent);
     check(CollisionComponent);
     check(WeaponFX);
-    check(ProjectileFX)
+    check(ProjectileFX);
 
-        MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
+    MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
     CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);
     CollisionComponent->OnComponentHit.AddDynamic(this, &ASTUProjectile::OnProjectileHit);
 
-    ProjectileFXComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(ProjectileFX, //
-        GetRootComponent(),                                                            //
-        FName(),                                                                       //
-        FVector::ZeroVector,                                                           //
-        FRotator::ZeroRotator,                                                         //
-        EAttachLocation::SnapToTarget,                                                 //
-        true);
+    TraceFXComponent = SpawnNiagaraSystem(TraceFX);
+    TraceFXComponent->OnSystemFinished.AddDynamic(this, &ASTUProjectile::OnTraceFXFinished);
+
+    ProjectileFXComponent = SpawnNiagaraSystem(ProjectileFX);
 
     SetLifeSpan(LifeSeconds);
 }
@@ -65,21 +65,35 @@ void ASTUProjectile::OnProjectileHit(
         GetActorLocation(),                         //
         DamageRadius,                               //
         UDamageType::StaticClass(),                 //
-        {GetOwner()},                             //
+        {GetOwner()},                               //
         this,                                       //
         GetController(),                            //
         DoFullDamage);
 
-    //DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 5.0f);
+    // DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 5.0f);
 
     WeaponFX->PlayImpactFX(Hit);
 
-    if (ProjectileFXComponent)
+    UAudioComponent* AudioComponent = STUUtils::GetSTUPlayerComponent<UAudioComponent>(this);
+
+    STUUtils::DeactivateComponent(AudioComponent);
+    STUUtils::DeactivateComponent(ProjectileFXComponent);
+    STUUtils::DeactivateComponent(TraceFXComponent);
+
+    UStaticMeshComponent* StaticMesh = STUUtils::GetSTUPlayerComponent<UStaticMeshComponent>(this);
+
+    if (StaticMesh)
     {
-        ProjectileFXComponent->SetVisibility(false);
-        CollisionComponent->SetVisibility(false);
+        StaticMesh->SetVisibility(false);
     }
-    SetLifeSpan(0.4f);
+}
+
+void ASTUProjectile::OnTraceFXFinished(UNiagaraComponent* NiagaraComponent)
+{
+    if (NiagaraComponent)
+    {
+        Destroy();
+    }
 }
 
 AController* ASTUProjectile::GetController() const
@@ -87,3 +101,15 @@ AController* ASTUProjectile::GetController() const
     const auto Pawn = Cast<APawn>(GetOwner());
     return Pawn ? Pawn->GetController() : nullptr;
 }
+
+UNiagaraComponent* ASTUProjectile::SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystem) const
+{
+    return UNiagaraFunctionLibrary::SpawnSystemAttached(NiagaraSystem, //
+        GetRootComponent(),                                            //
+        FName(),                                                       //
+        FVector::ZeroVector,                                           //
+        FRotator::ZeroRotator,                                         //
+        EAttachLocation::SnapToTarget,                                 //
+        true);
+}
+

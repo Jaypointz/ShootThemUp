@@ -32,6 +32,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "VFX")
     UNiagaraSystem* ProjectileFX;
 
+    UPROPERTY(EditDefaultsOnly, Category = "VFX")
+    UNiagaraSystem* TraceFX;
+
     UPROPERTY(VisibleAnywhere, Category = "VFX")
     USTUWeaponFXComponent* WeaponFX;
 
@@ -53,10 +56,16 @@ private:
     FVector ShotDirection;
 
     UNiagaraComponent* ProjectileFXComponent;
+    UNiagaraComponent* TraceFXComponent;
 
     UFUNCTION()
     void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
         const FHitResult& Hit);
 
+    UFUNCTION()
+    void OnTraceFXFinished(UNiagaraComponent* NiagaraComponent);
+
     AController* GetController() const;
+
+    UNiagaraComponent* SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystem) const;
 };

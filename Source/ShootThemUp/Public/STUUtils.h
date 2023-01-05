@@ -1,6 +1,7 @@
 #pragma once
 
 #include "STUPlayerState.h"
+#include "Niagara/Classes/NiagaraSystem.h"
 
 class STUUtils
 {
@@ -27,4 +28,12 @@ public:
     }
 
     static FText TextFromInt(int32 Number) { return FText::FromString(FString::FromInt(Number)); }
+
+    static void DeactivateComponent(USceneComponent* Component)
+    {
+        if (Component)
+        {
+            Component->Deactivate();
+        }
+    }
 };
