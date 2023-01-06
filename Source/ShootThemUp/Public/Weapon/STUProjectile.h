@@ -22,6 +22,8 @@ public:
 
     void SetShotDirection(const FVector& Direction) { ShotDirection = Direction; }
 
+    float GetDamageRadius() const { return DamageRadius; }
+
 protected:
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
     USphereComponent* CollisionComponent;

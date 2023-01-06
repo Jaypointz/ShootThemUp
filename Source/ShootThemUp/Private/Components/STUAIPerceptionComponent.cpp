@@ -5,12 +5,20 @@
 #include "STUUtils.h"
 #include "STUHealthComponent.h"
 #include "Perception/AISense_Sight.h"
+#include "Perception/AISense_Damage.h"
 
 AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
 {
+    AActor* ClosestEnemyAtSight = FindBestPawn(UAISense_Sight::StaticClass());
+
+    return ClosestEnemyAtSight ? ClosestEnemyAtSight : FindBestPawn(UAISense_Damage::StaticClass());
+}
+
+AActor* USTUAIPerceptionComponent::FindBestPawn(TSubclassOf<UAISense> Sense) const
+{
     TArray<AActor*> PerceivedActors;
 
-    GetCurrentlyPerceivedActors(UAISense_Sight::StaticClass(), PerceivedActors);
+    GetCurrentlyPerceivedActors(Sense, PerceivedActors);
     if (PerceivedActors.Num() == 0)
         return nullptr;
 

@@ -9,9 +9,9 @@
 UCLASS()
 class SHOOTTHEMUP_API USTUAIPerceptionComponent : public UAIPerceptionComponent
 {
-	GENERATED_BODY()
-
+    GENERATED_BODY()
 
 public:
-      AActor* GetClosestEnemy() const;
+    AActor* GetClosestEnemy() const;
+    AActor* FindBestPawn(TSubclassOf<UAISense> Sense) const;
 };

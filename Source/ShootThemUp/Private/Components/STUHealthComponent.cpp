@@ -7,6 +7,9 @@
 #include "TimerManager.h"
 #include "STUGameModeBase.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "Perception/AISense_Damage.h"
+#include "STUUtils.h"
+#include "STUProjectile.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
@@ -73,6 +76,21 @@ void USTUHealthComponent::OnTakeRadialDamage(AActor* DamagedActor, float Damage,
     FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
 {
     ApplyDamage(Damage, InstigatedBy);
+
+    if (IsDead())
+    {
+        const auto Projectile = Cast<ASTUProjectile>(DamageCauser);
+        if (!Projectile)
+            return;
+
+        if(const auto HitComponent = HitInfo.GetComponent())
+        {
+            const auto ImpulseForce = FMath::FRandRange(1000.0f, 2500.0f);
+
+            HitComponent->AddRadialImpulse(
+                Origin, Projectile->GetDamageRadius(), ImpulseForce * HitComponent->GetMass(), ERadialImpulseFalloff::RIF_Linear, false);
+        }
+    }
 }
 
 void USTUHealthComponent::HealUpdate()
@@ -147,6 +165,7 @@ void USTUHealthComponent::ApplyDamage(float Damage, AController* InstigatedBy)
     }
 
     PlayCameraShake();
+    ReportDamage(Damage, InstigatedBy);
 }
 
 float USTUHealthComponent::GetPointDamageModifier(AActor* DamagedActor, const FName& BoneName)
@@ -165,4 +184,18 @@ float USTUHealthComponent::GetPointDamageModifier(AActor* DamagedActor, const FN
         return 1.0f;
 
     return DamageModifiers[PhysMaterial];
+}
+
+void USTUHealthComponent::ReportDamage(float Damage, AController* InstigatedBy)
+{
+    if (!InstigatedBy || !InstigatedBy->GetPawn() || !GetOwner())
+        return;
+
+    UAISense_Damage::ReportDamageEvent(GetWorld(),   //
+        GetOwner(),                                  //
+        InstigatedBy->GetPawn(),                     //
+        Damage,                                      //
+        InstigatedBy->GetPawn()->GetActorLocation(), //
+        GetOwner()->GetActorLocation()               //
+    );
 }
