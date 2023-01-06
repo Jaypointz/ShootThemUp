@@ -1,6 +1,5 @@
 // Shoot Them Up Game, All Rights Reserved.
 
-
 #include "Player/STUPlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
@@ -9,8 +8,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 
-ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjInit)
-    : Super(ObjInit)
+ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjInit) : Super(ObjInit)
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
@@ -46,6 +44,10 @@ void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
     PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &USTUWeaponComponent::StopFire);
     PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &USTUWeaponComponent::NextWeapon);
     PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &USTUWeaponComponent::Reload);
+
+    DECLARE_DELEGATE_OneParam(FZoomInputSignature, bool);
+    PlayerInputComponent->BindAction<FZoomInputSignature>("Zoom", IE_Pressed, WeaponComponent, &USTUWeaponComponent::Zoom, true);
+    PlayerInputComponent->BindAction<FZoomInputSignature>("Zoom", IE_Released, WeaponComponent, &USTUWeaponComponent::Zoom, false);
 }
 
 bool ASTUPlayerCharacter::IsRunning() const
@@ -96,8 +98,8 @@ void ASTUPlayerCharacter::OnCameraCollisionBeginOverlap(UPrimitiveComponent* Pri
     CheckCameraOverlap();
 }
 
-void ASTUPlayerCharacter::OnCameraCollisionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
-    UPrimitiveComponent* PrimitiveComponent1, int I)
+void ASTUPlayerCharacter::OnCameraCollisionEndOverlap(
+    UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I)
 {
     CheckCameraOverlap();
 }

@@ -30,6 +30,8 @@ public:
     bool TryAddAmmo(const TSubclassOf<ASTUBaseWeapon>& WeaponType, int32 ClipsAmount);
     bool NeedAmmo(const TSubclassOf<ASTUBaseWeapon>& WeaponType);
 
+    void Zoom(bool Enabled);
+
 protected:
     UPROPERTY()
     ASTUBaseWeapon* CurrentWeapon = nullptr;

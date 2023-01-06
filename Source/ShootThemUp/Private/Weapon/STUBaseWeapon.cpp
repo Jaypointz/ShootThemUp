@@ -133,6 +133,10 @@ bool ASTUBaseWeapon::IsPlayerRunning() const
     return Player ? Player->IsRunning() : false;
 }
 
+void ASTUBaseWeapon::Zoom(bool Enabled)
+{
+}
+
 void ASTUBaseWeapon::ChangeClip()
 {
     if (!CurrentAmmo.Infinite)

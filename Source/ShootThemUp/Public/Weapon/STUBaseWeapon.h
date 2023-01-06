@@ -38,6 +38,8 @@ public:
 
     bool IsPlayerRunning() const;
 
+    virtual void Zoom(bool Enabled);
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* WeaponMesh;
