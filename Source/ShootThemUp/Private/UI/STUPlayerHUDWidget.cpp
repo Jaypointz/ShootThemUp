@@ -48,8 +48,6 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
 {
     const auto Controller = GetOwningPlayer();
 
-    UE_LOG(LogSTUPlayerHUD, Error, TEXT("Player - %s; State - %d"), *Controller->GetName(), Controller->GetStateName() == NAME_Spectating);
-
     return Controller && Controller->GetStateName() == NAME_Spectating;
 }
 
