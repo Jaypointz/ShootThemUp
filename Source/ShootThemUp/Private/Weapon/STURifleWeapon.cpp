@@ -107,7 +107,10 @@ void ASTURifleWeapon::MakeDamage(const FHitResult& HitResult)
     if (!DamagedActor)
         return;
 
-    DamagedActor->TakeDamage(DamageAmount, FDamageEvent(), GetController(), this);
+    FPointDamageEvent PointDamageEvent;
+    PointDamageEvent.HitInfo = HitResult;
+
+    DamagedActor->TakeDamage(DamageAmount, PointDamageEvent, GetController(), this);
 }
 
 void ASTURifleWeapon::InitFX()
@@ -135,7 +138,7 @@ void ASTURifleWeapon::SetFXActive(bool IsActive)
 
     if (FireAudioComponent)
     {
-        IsActive ? FireAudioComponent->Play() : FireAudioComponent->Stop();
+        IsActive ? FireAudioComponent->SetPaused(!IsActive);
     }
 }
 
