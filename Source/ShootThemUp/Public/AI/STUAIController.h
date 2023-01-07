@@ -32,4 +32,6 @@ protected:
 
 private:
     AActor* GetFocusOnActor() const;
+
+    FName UpperBodyBoneName{"b_head"};
 };

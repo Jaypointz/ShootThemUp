@@ -3,10 +3,12 @@
 
 #include "STUAIController.h"
 #include "AI/STUAIController.h"
+#include "STUUtils.h"
 #include "Components/STUAIPerceptionComponent.h"
 #include "Components/STURespawnComponent.h"
 #include "AI/STUAICharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Player/STUBaseCharacter.h"
 
 ASTUAIController::ASTUAIController()
 {
@@ -34,8 +36,11 @@ void ASTUAIController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    const auto AimActor = GetFocusOnActor();
-    SetFocus(AimActor);
+    const auto AimActor = Cast<ASTUBaseCharacter>(GetFocusOnActor());
+    if (AimActor)
+    {
+        SetFocus(AimActor->GetFocusPoint());
+    }
 }
 
 AActor* ASTUAIController::GetFocusOnActor() const

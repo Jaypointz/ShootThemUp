@@ -10,6 +10,7 @@
 class USTUHealthComponent;
 class USTUWeaponComponent;
 class USoundCue;
+class ASTUFocusPointPawn;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -26,6 +27,12 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTUWeaponComponent* WeaponComponent;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Focus")
+    TSubclassOf<ASTUFocusPointPawn> FocusPointClass;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Focus")
+    FName FocusPoint = "b_head";
 
     UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage* DeathAnimMontage;
@@ -55,6 +62,9 @@ protected:
 public:
     virtual void Tick(float DeltaTime) override;
 
+    virtual void TurnOff() override;
+    virtual void Reset() override;
+
     UFUNCTION(BlueprintCallable, Category = "Movement")
     virtual bool IsRunning() const;
 
@@ -62,7 +72,14 @@ public:
     float GetMovementDirection() const;
     void SetPlayerColor(const FLinearColor& Color);
 
+    AActor* GetFocusPoint() const;
+
 private:
+    UPROPERTY()
+    AActor* FocusPointPawn;
+
     UFUNCTION()
     void OnGroundLanded(const FHitResult& Hit);
+
+    void ResetWeaponComponent() const;
 };

@@ -12,6 +12,7 @@
 #include "GameFramework/Controller.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "AI/Focus/STUFocusPointPawn.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
@@ -34,17 +35,41 @@ void ASTUBaseCharacter::BeginPlay()
     check(HealthComponent);
     check(GetCharacterMovement());
     check(GetMesh());
+    check(GetWorld())
 
     OnHealthChanged(HealthComponent->GetHealth(), 0.0f);
     HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
     HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
 
     LandedDelegate.AddDynamic(this, &ASTUBaseCharacter::OnGroundLanded);
+
+    const auto SocketTransform = GetMesh()->GetSocketTransform(FocusPoint);
+
+    FocusPointPawn = GetWorld()->SpawnActor(FocusPointClass, &SocketTransform);
+
+    if (FocusPointPawn)
+    {
+        const FAttachmentTransformRules AttachmentRules(
+            EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, true);
+        FocusPointPawn->AttachToComponent(GetMesh(), AttachmentRules, FocusPoint);
+    }
 }
 
 void ASTUBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+}
+
+void ASTUBaseCharacter::TurnOff()
+{
+    ResetWeaponComponent();
+    Super::TurnOff();
+}
+
+void ASTUBaseCharacter::Reset()
+{
+    ResetWeaponComponent();
+    Super::Reset();
 }
 
 bool ASTUBaseCharacter::IsRunning() const
@@ -74,6 +99,11 @@ void ASTUBaseCharacter::SetPlayerColor(const FLinearColor& Color)
     MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
 }
 
+AActor* ASTUBaseCharacter::GetFocusPoint() const
+{
+    return FocusPointPawn;
+}
+
 void ASTUBaseCharacter::OnDeath()
 {
     UE_LOG(LogBaseCharacter, Display, TEXT("Player %s is dead"), *GetName());
@@ -84,8 +114,7 @@ void ASTUBaseCharacter::OnDeath()
 
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
-    WeaponComponent->StopFire();
-    WeaponComponent->Zoom(false);
+    ResetWeaponComponent();
 
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     GetMesh()->SetSimulatePhysics(true);
@@ -109,4 +138,10 @@ void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)
     const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
     UE_LOG(LogBaseCharacter, Display, TEXT("Final Damage: %f"), FinalDamage);
     TakeDamage(FinalDamage, FPointDamageEvent{}, nullptr, nullptr);
+}
+
+void ASTUBaseCharacter::ResetWeaponComponent() const
+{
+    WeaponComponent->StopFire();
+    WeaponComponent->Zoom(false);
 }
