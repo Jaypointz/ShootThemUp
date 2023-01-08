@@ -78,7 +78,7 @@ void USTUWeaponComponent::SpawnWeapons()
     }
 }
 
-void USTUWeaponComponent::AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName) const
+void USTUWeaponComponent::AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName)
 {
     if (!Weapon || !SceneComponent)
         return;

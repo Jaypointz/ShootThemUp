@@ -1,6 +1,5 @@
 // Shoot Them Up Game, All Rights Reserved.
 
-
 #include "STUAIController.h"
 #include "AI/STUAIController.h"
 #include "STUUtils.h"

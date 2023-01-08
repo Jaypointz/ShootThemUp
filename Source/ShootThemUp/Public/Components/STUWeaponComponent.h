@@ -69,7 +69,7 @@ private:
     bool ReloadAnimInProgress = false;
 
     void SpawnWeapons();
-    void AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName) const;
+    static void AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName);
 
     void PlayAnimMontage(UAnimMontage* Animation) const;
     void InitAnimations();
